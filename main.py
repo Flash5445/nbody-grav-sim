@@ -16,30 +16,22 @@ class System:
         v_com = (np.sum(m*v, axis=0) / np.sum(m, axis=0))
         v = v - v_com
         return p, v
-    
-def acceleration(m, p, G):
-    # so first off we need to find a vector and a distance
-    acc = np.zeros((p.shape))
-    pos_ind = 0
-    for pos_ind, pos in enumerate(p): # this iterates pos through all positions
-        # directions
-        dir = np.delete(p - pos, pos_ind, axis=0) # this takes the position, broadcasts it to be subtracted by the p database, and then deletes the row that the position was taken from
-        #magnitude
-        mag = np.array([(G * np.delete(m.T, pos_ind, axis=None).T)/(np.power(np.sqrt(np.sum(np.square(dir), axis=1)), 3) + 1e-6)]).T
-        # acceleration = sum(magnitude * direction)
-        acc_row = np.sum(mag * dir, axis=0)
-        acc[pos_ind] = acc_row
-        pos_ind += 1
-    return acc
 
-testp = np.array([[1, 2, 3],
-                  [4, 5, 6],
-                  [7, 8, 9]])
-testv = np.array([[9, 8, 7],
-                  [6, 5, 4],
-                  [3, 2, 1]])
-testm = np.array([[1],
-                  [2],
-                  [3]])
+    @staticmethod
+    def acceleration(m, p, G):
+        # so first off we need to find a vector and a distance
+        acc = np.zeros((p.shape))
+        pos_ind = 0
+        for pos_ind, pos in enumerate(p): # this iterates pos through all positions
+            # directions
+            dir = np.delete(p - pos, pos_ind, axis=0) # this takes the position, broadcasts it to be subtracted by the p database, and then deletes the row that the position was taken from
+            #magnitude
+            mag = np.array([(G * np.delete(m.T, pos_ind, axis=None).T)/(np.power(np.sqrt(np.sum(np.square(dir), axis=1)), 3) + 1e-6)]).T
+            # acceleration = sum(magnitude * direction)
+            acc_row = np.sum(mag * dir, axis=0)
+            acc[pos_ind] = acc_row
+            pos_ind += 1
+        return acc
 
-print(acceleration(testm * 1e12, testp, const.G))
+    def acceleration_calculator(self):
+        return self.acceleration(self.m, self.p, self.G)
