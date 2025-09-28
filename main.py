@@ -32,6 +32,30 @@ class System:
             acc[pos_ind] = acc_row
             pos_ind += 1
         return acc
+    
+    def f(self, x, t):
+        # loop through x[pos, 0] gives p
+        # loop through x[pos, 1] gives v
+        for pos in range(self.m.T.shape[1]):
+            newp = x[pos, 1]
+            newv = self.acceleration(self.m, x[pos, 0], const.G)
+        newx = np.stack((newp, newv), axis=1)
+        return newx
+    
+    @staticmethod
+    def rk4(x, t, dt):
+        f1 = System.f(x, t)
+        f2 = System.f(x + 0.5*dt*f1, t + 0.5*dt)
+        f3 = System.f(x + 0.5*dt*f2, t + 0.5*dt)
+        f4 = System.f(x + dt*f3, t + dt)
+        x_n = x + (dt * (f1 + 2*f2 + 2*f3 + f4)) / 6
+        return x_n
 
-    def acceleration_calculator(self):
-        return self.acceleration(self.m, self.p, self.G)
+    def simulate(self, p, v, t, dt, T):
+        x = np.stack((p, v), axis=1)
+        iterations = T/dt
+        history = np.zeros((iterations, x.shape[0], x.shape[1], x.shape[2]))
+        for i in range(iterations):
+            x = System.rk4(x, t, dt)
+            history[i] = x
+        return history
