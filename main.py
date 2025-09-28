@@ -19,22 +19,18 @@ class System:
     
 def acceleration(m, p, G):
     # so first off we need to find a vector and a distance
-    accel = np.empty((0, p.shape[1] - 1))
+    acc = np.zeros((p.shape))
     pos_ind = 0
-    for pos in p: # this iterates pos through all positions
+    for pos_ind, pos in enumerate(p): # this iterates pos through all positions
         # directions
-        dir = np.delete(pos - p, pos_ind, axis=0) # this takes the position, broadcasts it to be subtracted by the p database, and then deletes the row that the position was taken from
+        dir = np.delete(p - pos, pos_ind, axis=0) # this takes the position, broadcasts it to be subtracted by the p database, and then deletes the row that the position was taken from
         #magnitude
-        mag = (G * np.delete(m.T, pos_ind, axis=None).T * m.T[pos_ind])/(np.power(np.sqrt(np.sum(np.square(dir), axis=1)), 3))
-        print(mag)
+        mag = np.array([(G * np.delete(m.T, pos_ind, axis=None).T)/(np.power(np.sqrt(np.sum(np.square(dir), axis=1)), 3) + 1e-6)]).T
         # acceleration = sum(magnitude * direction)
         acc_row = np.sum(mag * dir, axis=0)
-        accel = np.vstack((accel, acc_row))
+        acc[pos_ind] = acc_row
         pos_ind += 1
-    accel = np.sum(accel, axis=0)
-    return accel
-
-
+    return acc
 
 testp = np.array([[1, 2, 3],
                   [4, 5, 6],
@@ -46,5 +42,4 @@ testm = np.array([[1],
                   [2],
                   [3]])
 
-    
-print(acceleration(testm, testp, const.G))
+print(acceleration(testm * 1e12, testp, const.G))
