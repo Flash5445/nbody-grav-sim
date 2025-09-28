@@ -21,7 +21,6 @@ class System:
     def acceleration(m, p, G):
         # so first off we need to find a vector and a distance
         acc = np.zeros((p.shape))
-        pos_ind = 0
         for pos_ind, pos in enumerate(p): # this iterates pos through all positions
             # directions
             dir = np.delete(p - pos, pos_ind, axis=0) # this takes the position, broadcasts it to be subtracted by the p database, and then deletes the row that the position was taken from
