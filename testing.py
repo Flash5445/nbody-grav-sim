@@ -7,5 +7,5 @@ v = np.zeros((10, 3))
 p = np.random.rand(10, 3) * 1e2
 
 sys = System(m, v, p, const.G)
-x = sys.rk4(m, np.stack((p, v), axis=1), t=0, dt=0.1)
-print(x)
+history = sys.simulate(m, p, v, t=0, dt=0.1, T=10)
+print(history)
