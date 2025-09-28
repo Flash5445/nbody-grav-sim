@@ -53,7 +53,7 @@ class System:
 
     def simulate(self, m, p, v, t, dt, T):
         x = np.stack((p, v), axis=1)
-        iterations = round(T/dt) + 1
+        iterations = T/dt
         history = np.zeros((int(iterations), x.shape[0], x.shape[1], x.shape[2]))
         for i in range(int(iterations)):
             x = System.rk4(m, x, t, dt)
