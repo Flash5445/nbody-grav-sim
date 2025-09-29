@@ -6,12 +6,15 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import Axes3D # This is necessary for the '3d' projection
 
-m = np.random.rand(10, 1) * 1e12
-v = np.zeros((10, 3))
-p = np.random.rand(10, 3) * 1e2
+num_of_particles = 4
+m = np.random.rand(num_of_particles, 1) * 1e12
+v = np.zeros((num_of_particles, 3))
+p = np.random.rand(num_of_particles, 3) * 1e2
+dt = 0.1
+T = 16
 
 sys = System(m, v, p, const.G)
-history = sys.simulate(m, p, v, t=0, dt=0.1, T=10)
+history = sys.simulate(m, p, v, t=0, dt=dt, T=T)
 history_p = history[:, :, 0, :]
 history_v = history[:, :, 1, :]
 print(history_p.shape, history_v.shape)
@@ -22,8 +25,8 @@ print(history_p.shape, history_v.shape)
 # For this example, that is (100, 10, 3).
 
 print("Generating sample data...")
-num_frames = 100
-num_points = 10
+num_frames = history_p.shape[0]
+num_points = history_p.shape[1]
 data = history_p
 print(f"Data shape: {data.shape}")
 
@@ -65,7 +68,7 @@ def update(frame):
     scatter._offsets3d = (current_positions[:, 0], current_positions[:, 1], current_positions[:, 2])
     
     # Update the title to show the current time step
-    time = frame * 0.1 # Since each frame is a 0.1s step
+    time = frame * dt # Since each frame is a 0.1s step
     ax.set_title(f'3D Point Animation (Time: {time:.1f}s)')
     
     return scatter,
@@ -88,8 +91,8 @@ plt.show()
 # Then, uncomment one of the lines below.
 
 # print("Saving animation as MP4...")
-# ani.save('3d_point_animation.mp4', writer='ffmpeg', fps=20)
-# print("Done.")
+#ani.save('3d_point_animation.gif', writer='ffmpeg', fps=20)
+#print("Done.")
 
 # print("Saving animation as GIF...")
 # ani.save('3d_point_animation.gif', writer='imagemagick', fps=20)
