@@ -1,23 +1,49 @@
-from main import System
 import numpy as np
 import scipy.constants as const
+from main import System
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import Axes3D # This is necessary for the '3d' projection
 
-num_of_particles = 4
-m = np.random.rand(num_of_particles, 1) * 1e12
-v = np.zeros((num_of_particles, 3))
-p = np.random.rand(num_of_particles, 3) * 1e2
-dt = 0.1
-T = 20
+num_of_particles = 9
+
+p = np.array([[-7.96712825e-03, -2.90611166e-03, 2.10213120e-04],
+ [-2.82597500e-01, 1.97456095e-01, 4.17742433e-02],
+ [-7.23209543e-01, -7.94829045e-02, 4.04286220e-02],
+ [-1.73818374e-01, 9.66324671e-01, 1.55297876e-04],
+ [-3.01325412e-01, -1.45402922e+00, -2.30054066e-02],
+ [ 3.48520330e+00, 3.55213702e+00, -9.27104467e-02],
+ [ 8.98810505e+00, -3.71906474e+00, -2.93193870e-01],
+ [ 1.22630250e+01, 1.52973880e+01, -1.02054995e-01],
+ [ 2.98350154e+01, -1.79381284e+00, -6.50640206e-01]]) * const.au
+
+v =np.array([[4.87524241e-06, -7.05716139e-06, -4.57929038e-08],
+ [-2.23216589e-02, -2.15720711e-02, 2.85519283e-04],
+ [ 2.03406835e-03, -2.02082863e-02, -3.94564043e-04],
+ [-1.72300122e-02, -2.96772137e-03, 6.38154172e-07],
+ [ 1.42483227e-02, -1.57923621e-03, -3.82372338e-04],
+ [-5.47097051e-03, 5.64248731e-03, 9.89618477e-05],
+ [ 1.82201399e-03, 5.14347040e-03, -1.61723649e-04],
+ [-3.09761521e-03, 2.27678190e-03, 4.86042739e-05],
+ [ 1.67653809e-04, 3.15209870e-03, -6.87750693e-05]]) * const.au / const.day
+
+m = np.array([[1.00000000e+00], 
+              [1.66012083e-07], 
+              [2.44783829e-06], 
+              [3.00348962e-06],
+              [3.22715608e-07], 
+              [9.54791910e-04], 
+              [2.85885670e-04], 
+              [4.36624961e-05],
+              [5.15138377e-05]]) * 1.9885e30
+
+dt = 86400
+T= 3.154e7 * 165
 
 sys = System(m, v, p, const.G)
 history = sys.simulate(m, p, v, t=0, dt=dt, T=T)
 history_p = history[:, :, 0, :]
-history_v = history[:, :, 1, :]
-print(history_p.shape, history_v.shape)
 
 # --- 1. Load or Generate Your Data ---
 # Replace this section with your actual data.
@@ -80,7 +106,7 @@ def update(frame):
 # - update: The function to call for each frame.
 # - frames: The number of frames (in this case, 100).
 # - interval: Delay between frames in milliseconds.
-ani = FuncAnimation(fig, update, frames=num_frames, interval = dt * 1000 * 0.5, blit=False)
+ani = FuncAnimation(fig, update, frames=num_frames, interval = 1, blit=False)
 
 # Show the plot
 plt.show()

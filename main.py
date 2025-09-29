@@ -35,6 +35,17 @@ class System:
         # Note the sign change in `diff` is handled by the subtraction order
         # Broadcasting m and inv_dist_cubed to match the shape of diff
         acc = G * np.sum(m * inv_dist_cubed[..., np.newaxis] * diff, axis=1)
+        '''
+        acc = np.zeros(p.shape)
+        for pos_ind, pos in enumerate(p): # this iterates pos through all positions
+            # directions
+            dir = np.delete(p - pos, pos_ind, axis=0) # this takes the position, broadcasts it to be subtracted by the p database, and then deletes the row that the position was taken from
+            #magnitude
+            mag = np.array([(G * np.delete(m.T, pos_ind, axis=None).T)/(np.power(np.sqrt(np.sum(np.square(dir), axis=1)), 3) + 1e-6)]).T
+            # acceleration = sum(magnitude * direction)
+            acc_row = np.sum(mag * dir, axis=0)
+            acc[pos_ind] = acc_row
+            pos_ind += 1'''
         return acc
     
     @staticmethod
