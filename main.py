@@ -20,16 +20,21 @@ class System:
     @staticmethod
     def acceleration(m, p, G):
         # so first off we need to find a vector and a distance
-        acc = np.zeros((p.shape))
-        for pos_ind, pos in enumerate(p): # this iterates pos through all positions
-            # directions
-            dir = np.delete(p - pos, pos_ind, axis=0) # this takes the position, broadcasts it to be subtracted by the p database, and then deletes the row that the position was taken from
-            #magnitude
-            mag = np.array([(G * np.delete(m.T, pos_ind, axis=None).T)/(np.power(np.sqrt(np.sum(np.square(dir), axis=1)), 3) + 1e-6)]).T
-            # acceleration = sum(magnitude * direction)
-            acc_row = np.sum(mag * dir, axis=0)
-            acc[pos_ind] = acc_row
-            pos_ind += 1
+        diff = p[np.newaxis, :, :] - p[:, np.newaxis, :]
+        
+        # Calculate pairwise squared distances + softening factor to avoid division by zero
+        dist_sq = np.sum(diff**2, axis=-1) + 1e-12 # Softening
+        
+        # Calculate inverse cube of the distance
+        inv_dist_cubed = dist_sq**(-1.5)
+        
+        # Set self-interaction to zero
+        np.fill_diagonal(inv_dist_cubed, 0.)
+
+        # Calculate acceleration: a_i = sum_j(G * m_j * (r_j - r_i) / |r_ij|^3)
+        # Note the sign change in `diff` is handled by the subtraction order
+        # Broadcasting m and inv_dist_cubed to match the shape of diff
+        acc = G * np.sum(m * inv_dist_cubed[..., np.newaxis] * diff, axis=1)
         return acc
     
     @staticmethod
