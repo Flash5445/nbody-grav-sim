@@ -11,11 +11,9 @@ class System:
     def center_of_mass_correction(m, v, p):
         # position
         p_com = (np.sum(m * p, axis=0) / np.sum(m, axis=0))
-        p = p - p_com 
         # velocity
         v_com = (np.sum(m*v, axis=0) / np.sum(m, axis=0))
-        v = v - v_com
-        return p, v
+        return p_com, v_com
 
     @staticmethod
     def acceleration(m, p, G):
@@ -75,5 +73,3 @@ class System:
             history[i] = x
         return history
 
-    def barnes_hut(a, b):
-        pass
