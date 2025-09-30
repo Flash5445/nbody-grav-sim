@@ -74,3 +74,6 @@ class System:
             x = System.rk4(m, x, t, dt)
             history[i] = x
         return history
+
+    def barnes_hut(a, b):
+        pass
