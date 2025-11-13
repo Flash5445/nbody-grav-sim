@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import Axes3D # This is necessary for the '3d' projection
 
-num_of_particles = 50
+num_of_particles = 5
 m = np.random.rand(num_of_particles, 1) * 1e12
 v = np.zeros((num_of_particles, 3))
 p = np.random.rand(num_of_particles, 3) * 1e2
